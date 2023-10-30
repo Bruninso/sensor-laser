@@ -1,10 +1,49 @@
+int sinal=12;
+int estado=0;
+int buzzer = 13;
+int ledverde = 11;
+int ledvermelho = 10;
 
-Explicação do código:
+void setup()
+{
+ Serial.begin(9600);
+ pinMode(sinal,INPUT); 
+ pinMode(ledverde,OUTPUT); 
+ pinMode(ledvermelho,OUTPUT); 
+}
 
-Primeiramente é definido as variáveis ​​globais para os pinos que serão usados ​​no circuito.
-
-Em setup(), é iniciado a comunicação serial a 9600 bps e definido os modos dos pinos botão, LED verde e do LED vermelho para INPUT, OUTPUT e OUTPUT respectivamente.
-
-Em loop(), o código verifica se o pino do botão está em HIGH(ou seja, se o sinal está ativo ou não). Se for HIGH, alternará o estado de 0 para 1 com um atraso de 1 segundo.
-
-Se o estado for 0, o LED vermelho acende e o LED verde apaga, sinalizando que o circuito está desligado. Se o estado for 1, o LED vermelho apaga e o LED verde acende. Em seguida, ele lê o valor passado pelo Sensor LDR do pino A0 usando analogRead() e verifica se esse valor é menor que 600. Se for menor que 600, gerará um tom no Buzzer com uma frequência de sua escolha durante o período que o sensor captar movimento. Caso contrário, desliga o Buzzer com noTone() e imprime a leitura no monitor serial.
+void loop()
+{
+  if(digitalRead(sinal)== HIGH){
+  
+      if(estado == 0){
+      estado = 1;
+      delay(500);
+      }else if(estado == 1){
+      estado = 0;
+      delay(500);  
+      } 
+  }
+  if(estado == 0){
+    digitalWrite(ledvermelho,HIGH);
+    digitalWrite(ledverde,LOW);
+    noTone(13);
+   
+  }
+  else if(estado == 1){
+  digitalWrite(ledvermelho,LOW);  
+  digitalWrite(ledverde,HIGH);
+  int ldr = analogRead(A0);
+    if(ldr < 600){
+    tone(buzzer,1000);
+    
+    }else if(ldr>600){
+      noTone(13);
+    }
+     Serial.println(ldr);
+  }
+  
+  
+    
+ 
+}
